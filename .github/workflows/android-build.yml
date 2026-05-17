@@ -24,17 +24,16 @@ jobs:
       - name: Setup Capacitor
         run: |
           yarn add @capacitor/core @capacitor/cli @capacitor/android
-          # 1. Package name badal kar com.myblog.app kar diya (No Java Keywords)
           npx cap init "SuperApp" "com.myblog.app" --web-dir=out
           npx cap add android
           npx cap sync android
           
-      - name: Force Android SDK Fix
+      - name: Force Android SDK 36 Fix
         run: |
-          # 2. Gradle ko forcefully batayenge ke Android SDK 34 use kare
+          # AndroidX ki latest dependencies ke liye SDK 36 forcefully inject karenge
           cd android/app
-          sed -i 's/compileSdk.*/compileSdk 34/g' build.gradle
-          sed -i 's/targetSdk.*/targetSdk 34/g' build.gradle
+          sed -i 's/compileSdk.*/compileSdk 36/g' build.gradle
+          sed -i 's/targetSdk.*/targetSdk 36/g' build.gradle
           
       - name: Compile APK
         run: |
