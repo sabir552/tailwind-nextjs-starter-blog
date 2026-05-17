@@ -7,19 +7,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - uses: actions/setup-node@v4
-        with: { node-version: '18' }
+        with: 
+          node-version: '20' # Humne version upgrade kiya hai taake native bindings support behtar ho
+          cache: 'yarn'
+          
       - uses: actions/setup-java@v4
         with: { distribution: 'zulu', java-version: '17' }
         
       - name: Install and Build
         run: |
-          npm install
-          npm run build
+          # npm ke bugs se bachne ke liye Yarn use karenge jo native packages ko sahi install karta hai
+          yarn install --frozen-lockfile
+          yarn build
           
       - name: Setup Capacitor
         run: |
-          npm install @capacitor/core @capacitor/cli @capacitor/android
+          yarn add @capacitor/core @capacitor/cli @capacitor/android
           npx cap init "SuperApp" "com.super.app" --web-dir=out
           npx cap add android
           npx cap sync android
