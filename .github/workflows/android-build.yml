@@ -10,7 +10,7 @@ jobs:
       
       - uses: actions/setup-node@v4
         with: 
-          node-version: '22' # Version 20 se badal kar 22 kar diya hai
+          node-version: '22'
           cache: 'yarn'
           
       - uses: actions/setup-java@v4
@@ -24,9 +24,17 @@ jobs:
       - name: Setup Capacitor
         run: |
           yarn add @capacitor/core @capacitor/cli @capacitor/android
-          npx cap init "SuperApp" "com.super.app" --web-dir=out
+          # 1. Package name badal kar com.myblog.app kar diya (No Java Keywords)
+          npx cap init "SuperApp" "com.myblog.app" --web-dir=out
           npx cap add android
           npx cap sync android
+          
+      - name: Force Android SDK Fix
+        run: |
+          # 2. Gradle ko forcefully batayenge ke Android SDK 34 use kare
+          cd android/app
+          sed -i 's/compileSdk.*/compileSdk 34/g' build.gradle
+          sed -i 's/targetSdk.*/targetSdk 34/g' build.gradle
           
       - name: Compile APK
         run: |
